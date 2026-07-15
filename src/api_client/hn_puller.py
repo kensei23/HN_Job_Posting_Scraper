@@ -13,7 +13,8 @@ def extract_job_posting_info(URL):
     all_listings = job_posting_data.get('kids')
 
     extracted_listings = []
-    for listing in all_listings[:3]:  # Limit to first 5 listings for demonstration
+
+    for listing in all_listings[:3]:  # Limit to first 3 listings for demonstration
         response = requests.get(f'https://hacker-news.firebaseio.com/v0/item/{listing}.json', headers=headers)
         comment_data = response.json()
         comment_text = comment_data.get('text')

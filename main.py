@@ -1,9 +1,15 @@
 from src.api_client.hn_puller import extract_job_posting_info
 from src.parser.llm_extractor import structuring_job_posting_info
 import time
+import os
 
 def main():
 
+    # Define the storage folder and file name for storing job listings
+    storage_folder = "storage"
+    file_name = "job_listings.jsonl"
+    full_path = os.path.join(storage_folder, file_name)
+    
     URL = "https://hacker-news.firebaseio.com/v0/item/48357725.json"  # Example URL for a Hacker News job posting
 
     extracted_listings = extract_job_posting_info(URL)
@@ -16,22 +22,33 @@ def main():
         try:
             structured_info = structuring_job_posting_info(listing)
 
+            # Check if structured_info is None or if any required fields are missing
             if structured_info.company_name is None or structured_info.role is None:
                 print("Failed to extract structured information from the job posting.")
-                continue
-   
+                continue               
+
+            # Ensure 'storage' folder exists
+            if not os.path.exists(storage_folder):
+                os.makedirs(storage_folder)
+
+            # Append the structured information to the JSONL file
+            with open(full_path, 'a', encoding='utf-8') as f:
+                f.write(structured_info.model_dump_json() + '\n')
+
+            # Print the structured information to the console
             printing_structured_info(structured_info)
 
         except Exception as e:
+            # Handle resource exhaustion or other exceptions
             print("Resource exhausted error occurred. Retrying after a short delay...")
             print(f"Error details: {e}")
+
             time.sleep(60)  # Wait for 60 seconds before retrying
 
             structured_info = structuring_job_posting_info(listing)
-
             printing_structured_info(structured_info)
         
-
+# Function for printing structured information to the console
 def printing_structured_info(structured_info):
     print(f"Company name: {structured_info.company_name}")
     print(f"Role: {structured_info.role}")
