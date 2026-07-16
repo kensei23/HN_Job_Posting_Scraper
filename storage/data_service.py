@@ -36,6 +36,21 @@ def filter_by_skill(jobs, skill_name):
                 yield job
                 break  # No need to check further tech requirements for this job
 
+# Checks if job location matches users desired location
+def filter_by_location(jobs, location):
+    location = location.lower()
+    
+    for job in jobs:
+
+        if not job.location: continue
+
+        city_match = (job.location.city and job.location.city.lower() == location)
+        country_match = (job.location.country and job.location.country.lower() == location)
+        state_match = (job.location.state and job.location.state.lower() == location)
+
+        if city_match or country_match or state_match:
+            yield job
+
 # Returns all jobs that match the user's remote preference
 def filter_by_remote(jobs, is_remote):
     for job in jobs:
