@@ -4,6 +4,7 @@ function App(){
     // Create short-term memory
     const[jobs,setJobs] = useState([]);
     const[loading,setLoading] = useState(true);
+    const isValid = (val) => val && val !== "null" && val.trim() !== "";
 
     // Fetch data when page loads - recieves as messy JSON and turns it into readable JavaScript
     // [] at the end signals the fetch to run once and not every render
@@ -107,11 +108,11 @@ function App(){
                                 )}
 
                                 {/* Contact / Apply Section */}
-                                {(job.contact_info?.apply_contact || job.contact_info?.apply_url) && (
-                                    <div>
-                                        {job.contact_info?.apply_url ? (
+                                {(isValid(job.contact_info?.apply_contact) || isValid(job.contact_info?.apply_url)) && (
+                                    <div style={{ marginTop: '16px'}}>
+                                        {isValid(job.contact_info?.apply_url) ? (
                                             <a
-                                                href={job.contact_info?.apply_url.startsWith('http') ? job.contact_info?.apply_url : 'https://${job.apply_url}'}
+                                                href={job.contact_info?.apply_url.startsWith('http') ? job.contact_info?.apply_url : 'https://${job.contact_info.apply_url}'}
                                                 target="blank"
                                                 rel="noopener noreferrer"
                                                 style={{
@@ -121,7 +122,8 @@ function App(){
                                                     fontWeight: '600',
                                                     padding: '6px 14px',
                                                     borderRadius: '6px',
-                                                    textDecoration: 'none'
+                                                    textDecoration: 'none',
+                                                    display: 'inline-block'
                                                 }}
                                             >
                                                 Apply Now ↗

@@ -32,4 +32,4 @@ class JobPosting(BaseModel):
     location: locationDetails = Field(description="Location details of the job")
     salary_range: Optional[str] = Field(description="Salary range for the position, if available")
     tech_stack: List[TechRequirement] = Field(description="List of technologies/programming languages required for the job and state if they are preferred or required")
-    contact_info: Optional[ApplyInfo] = Field(description="Email or contact instructions if included")
+    contact_info: ApplyInfo = Field(description="Email/Application URL or number if provided")
