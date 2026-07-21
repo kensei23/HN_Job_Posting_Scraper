@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from storage.data_service import *
+from src.storage.data_service import *
 from dotenv import load_dotenv
 import os
 

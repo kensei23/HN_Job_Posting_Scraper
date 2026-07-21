@@ -67,6 +67,14 @@ def printing_structured_info(structured_info):
     else: 
         print("Tech Stack: Not Specified")
 
+    if structured_info.contact_info:
+                url = structured_info.contact_info.apply_url
+                contact = structured_info.contact_info.apply_contact
+                if url and url != "None":
+                    print(f"  Apply URL: {url}")
+                if contact and contact != "None":
+                    print(f"  Contact Info: {contact}")
+                
     print("--" * 50)
 
 if __name__ == "__main__":

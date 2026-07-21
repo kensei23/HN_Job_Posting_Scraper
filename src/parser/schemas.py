@@ -21,6 +21,10 @@ class locationDetails(BaseModel):
     country: Optional[str] = "None"
     is_remote: RemoteStatus
 
+class ApplyInfo(BaseModel):
+    apply_url: Optional[str] = "None"
+    apply_contact: Optional[str] = "None"
+
 class JobPosting(BaseModel):
     company_name: str = Field(description="Name of the company hiring")
     role: List[str] = Field(description="Job role or title")
@@ -28,3 +32,4 @@ class JobPosting(BaseModel):
     location: locationDetails = Field(description="Location details of the job")
     salary_range: Optional[str] = Field(description="Salary range for the position, if available")
     tech_stack: List[TechRequirement] = Field(description="List of technologies/programming languages required for the job and state if they are preferred or required")
+    contact_info: Optional[ApplyInfo] = Field(description="Email or contact instructions if included")
