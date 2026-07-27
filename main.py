@@ -1,18 +1,25 @@
-from src.api_client.hn_puller import extract_job_posting_info
+from src.api_client.hn_puller import extract_job_posting_info, get_hiring_threads
 from src.parser.llm_extractor import structuring_job_posting_info
 import time
 import os
 
-def main():
-
+def main(thread_id=None):
     # Define the storage folder and file name for storing job listings
     storage_folder = "data"
     file_name = "job_listings.jsonl"
     full_path = os.path.join(storage_folder, file_name)
     
-    URL = "https://hacker-news.firebaseio.com/v0/item/48357725.json"  # Example URL for a Hacker News job posting
+    if not thread_id:
+        print("Fetching latest 'Who is Hiring' thread")
+        threads = get_hiring_threads()
+        if threads:
+            thread_id = threads[0]['id']
+            print(f"Selected latest thread: {threads[0]['title']} (ID: {thread_id})")
+        else:
+            thread_id = "48357725"
 
-    extracted_listings = extract_job_posting_info(URL)
+    print(f"Extracting job postings for thread ID: {thread_id}")
+    extracted_listings = extract_job_posting_info(thread_id)
 
     if not extracted_listings:
         print("No job postings found.")

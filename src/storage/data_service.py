@@ -23,6 +23,11 @@ def read_jobs_from_jsonl(file_path):
     
     return results
 
+def filter_by_thread(jobs, thread_id):
+    for job in jobs:
+        if job.thread_id == str(thread_id):
+            yield job
+
 # Returns all jobs that contain the searched skill
 def filter_by_skill(jobs, skill_name):
     for job in jobs:

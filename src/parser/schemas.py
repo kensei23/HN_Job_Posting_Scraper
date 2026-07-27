@@ -26,6 +26,7 @@ class ApplyInfo(BaseModel):
     apply_contact: Optional[str] = "None"
 
 class JobPosting(BaseModel):
+    thread_id: str = Field(description="HN Thread ID for this job listing")
     company_name: str = Field(description="Name of the company hiring")
     role: List[str] = Field(description="Job role or title")
     summary: Optional[str] = Field(description="Brief summary of the job posting")

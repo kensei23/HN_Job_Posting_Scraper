@@ -141,10 +141,30 @@ function App() {
     const [locationFilter, setLocationFilter] = useState('');
     const [minSalaryFilter, setMinSalaryFilter] = useState('');
 
+    const [threads, setThreads] = useState([]);
+    const [selectedThread, setSelectedThread] = useState('');
+
     useEffect(() => {
+        fetch('http://127.0.0.1:8000/threads')
+        .then((res) => res.json())
+        .then((data) => {
+            setThreads(data);
+            if (data.length > 0){
+                setSelectedThread(data[0].id);
+            }
+        })
+        .catch((err) => console.error("Error fetching threads:", err))
+    }, [])
+
+    useEffect(() => {
+        if (!selectedThread) return;
+
         setLoading(true);
         // Build URL search params for backend filters
         const params = new URLSearchParams();
+
+        params.append('thread_id', selectedThread);
+
         if (remoteFilter) params.append('is_remote', remoteFilter);
         if (locationFilter) params.append('location', locationFilter);
         if (minSalaryFilter) params.append('min_salary', minSalaryFilter);
@@ -161,9 +181,9 @@ function App() {
                 console.error("Error fetching jobs:", err);
                 setLoading(false);
             });
-    }, [remoteFilter, locationFilter, minSalaryFilter]);
+    }, [selectedThread, remoteFilter, locationFilter, minSalaryFilter]);
 
-    // Client-side quick search (Search by company, role, or tech skills)
+    // Client-side quick search
     const filteredJobs = jobs.filter((job) => {
         if (!searchQuery.trim()) return true;
 
@@ -195,9 +215,35 @@ function App() {
                     <h1 style={{ fontSize: '2.25rem', fontWeight: '700', color: '#111827', marginBottom: '8px' }}>
                         HackerNews Job Board
                     </h1>
-                    <p style={{ color: '#6b7280', fontSize: '1.1rem' }}>
+                    <p style={{ color: '#6b7280', fontSize: '1.1rem', marginBottom: '16px' }}>
                         Connecting job searching developers with hiring companies.
                     </p>
+
+                    {/* Month Selector Dropdown */}
+                    {threads.length > 0 && (
+                        <div style={{ display: 'inline-block' }}>
+                            <select
+                                value={selectedThread}
+                                onChange={(e) => setSelectedThread(e.target.value)}
+                                style={{
+                                    padding: '8px 14px',
+                                    borderRadius: '8px',
+                                    border: '1px solid #d1d5db',
+                                    fontSize: '0.9rem',
+                                    fontWeight: '600',
+                                    backgroundColor: '#ffffff',
+                                    color: '#2563eb',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                {threads.map((t) => (
+                                    <option key={t.id} value={t.id}>
+                                        📅 {t.title}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
                 </header>
 
                 {/* Filter & Search Bar Controls */}

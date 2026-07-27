@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from src.storage.data_service import *
+from src.api_client.hn_puller import get_hiring_threads
 from dotenv import load_dotenv
 import os
 
@@ -20,10 +21,16 @@ app.add_middleware(
     allow_headers = ['*'],
 )
 
+@app.get('/threads')
+def get_threads():
+    return get_hiring_threads()
+
 @app.get('/jobs')
-def get_all_jobs(skill: str = None, min_salary: int = None, location: str = None, is_remote: str = None):
+def get_all_jobs(thread_id: str = None, skill: str = None, min_salary: int = None, location: str = None, is_remote: str = None):
     try:
         jobs = read_jobs_from_jsonl(data_path)
+        if thread_id:
+            jobs = list(filter_by_thread(jobs, thread_id))
         if skill:
             jobs = list(filter_by_skill(jobs, skill))
         if min_salary:
