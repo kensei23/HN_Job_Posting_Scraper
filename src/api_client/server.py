@@ -21,7 +21,7 @@ app.add_middleware(
 )
 
 @app.get('/jobs')
-def get_all_jobs(skill: str = None, min_salary: int = None, location: str = None, is_remote: bool = None):
+def get_all_jobs(skill: str = None, min_salary: int = None, location: str = None, is_remote: str = None):
     try:
         jobs = read_jobs_from_jsonl(data_path)
         if skill:

@@ -6,7 +6,7 @@ import os
 def main():
 
     # Define the storage folder and file name for storing job listings
-    storage_folder = "storage"
+    storage_folder = "data"
     file_name = "job_listings.jsonl"
     full_path = os.path.join(storage_folder, file_name)
     
@@ -37,6 +37,8 @@ def main():
 
             # Print the structured information to the console
             printing_structured_info(structured_info)
+
+            time.sleep(12)
 
         except Exception as e:
             # Handle resource exhaustion or other exceptions

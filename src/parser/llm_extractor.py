@@ -20,12 +20,22 @@ def structuring_job_posting_info(unstructured_job_info):
     )
 
     prompt = (f"Extract the job posting information from the following text but be concise: {unstructured_job_info}", 
-              "Please extract the information into the following JSON format: " + info_structure)
+              "Please return ONLY a single JSON object matching this schema: " + info_structure)
 
     response = model.generate_content(prompt)
 
     # print("RAW RESPONSE:")
     # print(response.text)  # Print the raw response for debugging
     # print("---" * 50)
-    return JobPosting.model_validate_json(response.text)
+    # return JobPosting.model_validate_json(response.text)
+
+    try: 
+        raw_json = json.loads(response.text)
+        if isinstance(raw_json, list) and len(raw_json) > 0:
+            raw_json = raw_json[0]
+        return JobPosting.model_validate(raw_json)
+    except Exception as e:
+        print(f"Error parsing Gemini JSON output: {e}")
+        raise e
+
 

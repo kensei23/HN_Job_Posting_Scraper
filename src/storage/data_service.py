@@ -44,9 +44,9 @@ def filter_by_location(jobs, location):
 
         if not job.location: continue
 
-        city_match = (job.location.city and job.location.city.lower() == location)
-        country_match = (job.location.country and job.location.country.lower() == location)
-        state_match = (job.location.state and job.location.state.lower() == location)
+        city_match = bool(job.location.city and location in job.location.city.lower())
+        country_match = bool(job.location.country and location in job.location.country.lower())
+        state_match = bool(job.location.state and location in job.location.state.lower())
 
         if city_match or country_match or state_match:
             yield job
